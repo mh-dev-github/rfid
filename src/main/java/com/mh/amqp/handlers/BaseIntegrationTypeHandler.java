@@ -59,11 +59,11 @@ public abstract class BaseIntegrationTypeHandler extends AbstractHandler<Request
 	}
 
 	private void reUpdate(RequestDTO request) {
-		getCorrecionesService().update(request.getIntegracionType(), MessageType.R, request.getExternalId());
+		getCorrecionesService().update(request.getIntegracionType(), MessageType.U, request.getExternalId());
 	}
 
 	private void reCreate(RequestDTO request) {
-		getCorrecionesService().create(request.getIntegracionType(), MessageType.R, request.getExternalId());
+		getCorrecionesService().create(request.getIntegracionType(), MessageType.C, request.getExternalId());
 	}
 
 	private void reTry(RequestDTO request) {

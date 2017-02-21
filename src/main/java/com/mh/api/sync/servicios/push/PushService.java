@@ -15,11 +15,13 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mh.amqp.dto.RequestDTO;
 import com.mh.api.sync.dto.base.PayloadDTO;
 import com.mh.api.sync.servicios.BaseSyncService;
@@ -177,6 +179,12 @@ public abstract class PushService<T extends PayloadDTO, S extends BaseMessageEnt
 	protected void exchange(long mid, String url, HttpMethod method, HttpEntity<?> request, Class<T> clazz) {
 		try {
 			log.info("Inicio de exchange {}", request.getBody());
+			MappingJackson2HttpMessageConverter mapping = new MappingJackson2HttpMessageConverter();
+			try {
+				log.debug(mapping.getObjectMapper().writeValueAsString(request.getBody()));
+			} catch (JsonProcessingException e) {
+				log.error("No fue posible convertir en JSON el mensaje {}", request.getBody().toString());
+			}
 			ResponseEntity<T> response = getRestTemplate().exchange(url, method, request, clazz);
 			proccesSuccessIntegration(mid, getIdFromResponseBody(response.getBody()));
 		} catch (RestClientResponseException e) {

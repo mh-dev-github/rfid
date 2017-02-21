@@ -34,8 +34,8 @@ public class SyncController {
 		rabbitTemplate.convertAndSend(RabbitMqConfig.EXCHANGE_NAME, RabbitMqConfig.ROUTING_KEY,
 				new RequestDTO(RequestType.SYNC_ALL));
 
-		HttpHeaders httpHeaders = new HttpHeaders();
-		return new ResponseEntity<>(null, httpHeaders, HttpStatus.ACCEPTED);
+		HttpHeaders httpHeaders = new HttpHeaders();	
+		return new ResponseEntity<>("", httpHeaders, HttpStatus.ACCEPTED);
 	}
 
 	@RequestMapping(value = "/locaciones", method = RequestMethod.POST)
@@ -45,7 +45,7 @@ public class SyncController {
 				new RequestDTO(RequestType.PUSH, IntegracionType.LOCACIONES));
 
 		HttpHeaders httpHeaders = new HttpHeaders();
-		return new ResponseEntity<>(null, httpHeaders, HttpStatus.ACCEPTED);
+		return new ResponseEntity<>("", httpHeaders, HttpStatus.ACCEPTED);
 	}
 
 	@RequestMapping(value = "/productos", method = RequestMethod.POST)
@@ -55,7 +55,7 @@ public class SyncController {
 				new RequestDTO(RequestType.PUSH, IntegracionType.PRODUCTOS));
 
 		HttpHeaders httpHeaders = new HttpHeaders();
-		return new ResponseEntity<>(null, httpHeaders, HttpStatus.ACCEPTED);
+		return new ResponseEntity<>("", httpHeaders, HttpStatus.ACCEPTED);
 	}
 
 	@RequestMapping(value = "/pedidos", method = RequestMethod.POST)
@@ -65,7 +65,7 @@ public class SyncController {
 				new RequestDTO(RequestType.PUSH, IntegracionType.PEDIDOS));
 
 		HttpHeaders httpHeaders = new HttpHeaders();
-		return new ResponseEntity<>(null, httpHeaders, HttpStatus.ACCEPTED);
+		return new ResponseEntity<>("", httpHeaders, HttpStatus.ACCEPTED);
 	}
 
 	@RequestMapping(value = "/pedidos", method = RequestMethod.PUT)
@@ -75,7 +75,7 @@ public class SyncController {
 				new RequestDTO(RequestType.PUSH_UPDATE, IntegracionType.PEDIDOS, externalId));
 
 		HttpHeaders httpHeaders = new HttpHeaders();
-		return new ResponseEntity<>(null, httpHeaders, HttpStatus.ACCEPTED);
+		return new ResponseEntity<>("", httpHeaders, HttpStatus.ACCEPTED);
 	}
 
 	@RequestMapping(value = "/salidas", method = RequestMethod.POST)
@@ -85,7 +85,7 @@ public class SyncController {
 				new RequestDTO(RequestType.PUSH, IntegracionType.SALIDAS_TIENDA));
 
 		HttpHeaders httpHeaders = new HttpHeaders();
-		return new ResponseEntity<>(null, httpHeaders, HttpStatus.ACCEPTED);
+		return new ResponseEntity<>("", httpHeaders, HttpStatus.ACCEPTED);
 	}
 
 	@RequestMapping(value = "/ordenes", method = RequestMethod.POST)
@@ -95,7 +95,7 @@ public class SyncController {
 				new RequestDTO(RequestType.PUSH, IntegracionType.ORDENES_DE_PRODUCCION));
 
 		HttpHeaders httpHeaders = new HttpHeaders();
-		return new ResponseEntity<>(null, httpHeaders, HttpStatus.ACCEPTED);
+		return new ResponseEntity<>("", httpHeaders, HttpStatus.ACCEPTED);
 	}
 
 	@RequestMapping(value = "/entradas", method = RequestMethod.POST)
@@ -105,6 +105,6 @@ public class SyncController {
 				new RequestDTO(RequestType.PUSH, IntegracionType.ENTRADAS_PT));
 
 		HttpHeaders httpHeaders = new HttpHeaders();
-		return new ResponseEntity<>(null, httpHeaders, HttpStatus.ACCEPTED);
+		return new ResponseEntity<>("", httpHeaders, HttpStatus.ACCEPTED);
 	}
 }

@@ -73,7 +73,7 @@ public class SerialesExportService {
 	private void checkDuplicadosEnLaBaseDeDatos(List<Serial> seriales) {
 		boolean duplicados = false;
 		StringBuilder sb = new StringBuilder();
-		sb.append("Los siguientes elementos estan duplicados en la base de datos de seriales:");
+		sb.append("Los siguientes elementos están duplicados en la base de datos de seriales:");
 		for (Serial serial : seriales) {
 			if (serialRepository.findOneBySerial(serial.getSerial()) != null) {
 				// @formatter:off

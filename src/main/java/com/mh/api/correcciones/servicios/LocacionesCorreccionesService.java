@@ -28,20 +28,12 @@ public class LocacionesCorreccionesService extends BaseCorreccionesService<Locac
 	}
 
 	@Override
-	protected LocacionMessage crearMensaje(Locacion entidad) {
-		LocacionMessage mensaje = new LocacionMessage();
-
-		poblarMessageEntity(mensaje, entidad);
-
-		mensaje.setName(entidad.getName());
-		mensaje.setAddress(entidad.getAddress());
-		mensaje.setType(entidad.getType());
-
-		return mensaje;
+	protected LocacionMessage clonarMensaje(LocacionMessage a) {
+		return new LocacionMessage(a);
 	}
 
 	@Override
-	protected LocacionMessage clonarMensaje(LocacionMessage a) {
-		return new LocacionMessage(a);
+	protected String getLogTableName() {
+		return "msg.Locaciones";
 	}
 }

@@ -6,50 +6,38 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mh.api.correcciones.dto.CorreccionCheckResponseDTO;
 import com.mh.api.mensajes.dto.LogDTO;
-import com.mh.api.mensajes.servicios.BaseMensajesService;
-import com.mh.api.mensajes.servicios.EntradasProductoMensajesService;
-import com.mh.api.mensajes.servicios.LocacionesMensajesService;
-import com.mh.api.mensajes.servicios.OrdenesProduccionMensajesService;
-import com.mh.api.mensajes.servicios.PedidosMensajesService;
-import com.mh.api.mensajes.servicios.ProductosMensajesService;
-import com.mh.api.mensajes.servicios.SalidasTiendaMensajesService;
+import com.mh.api.mensajes.dto.LogRowMapper;
 import com.mh.model.esb.domain.esb.BaseEntity;
 import com.mh.model.esb.domain.esb.IntegracionType;
 import com.mh.model.esb.domain.msg.BaseMessageEntity;
 import com.mh.model.esb.domain.msg.MessageStatusType;
 import com.mh.model.esb.domain.msg.MessageType;
 
+import lombok.val;
+
 public abstract class BaseCorreccionesService<TEntity extends BaseEntity, TMessage extends BaseMessageEntity> {
 
-	@Autowired
-	PedidosMensajesService pedidoService;
+	@Qualifier("esbJdbcTemplate")
 
 	@Autowired
-	SalidasTiendaMensajesService salidasTiendasService;
-
-	@Autowired
-	OrdenesProduccionMensajesService ordenesProduccionService;
-
-	@Autowired
-	EntradasProductoMensajesService entradasProductosService;
-
-	@Autowired
-	ProductosMensajesService productosService;
-
-	@Autowired
-	LocacionesMensajesService locacionesService;
+	protected NamedParameterJdbcTemplate esbJdbcTemplate;
 
 	// -------------------------------------------------------------------------------------
-	// REINTENTAR
+	//
 	// -------------------------------------------------------------------------------------
 	abstract protected JpaRepository<TMessage, Long> getMessageRepository();
 
 	abstract protected JpaRepository<TEntity, String> getEntityRepository();
+
+	abstract protected String getLogTableName();
 
 	// -------------------------------------------------------------------------------------
 	//
@@ -59,7 +47,7 @@ public abstract class BaseCorreccionesService<TEntity extends BaseEntity, TMessa
 
 		List<CorreccionCheckResponseDTO> list = this.check(tipoIntegracion, tipoMensaje, externalId);
 
-		//// @formatter:off
+		// @formatter:off
 		List<String> habilitados = list
 				.stream()
 				.filter(a -> a.isHabilitado())
@@ -68,23 +56,35 @@ public abstract class BaseCorreccionesService<TEntity extends BaseEntity, TMessa
 		// @formatter:on
 
 		LocalDateTime fechaUltimoPush = LocalDateTime.now();
-		
+
 		for (String e : habilitados) {
-			TMessage mensaje = getLastMessage(e);
+			//// @formatter:off
+			List<LogDTO> logs = this.getLogs(tipoIntegracion ,e)
+					.stream()
+					.filter( a -> !MessageType.X.equals(a.getType()))
+					.collect(Collectors.toList());
+ 			// @formatter:on
+			if (!logs.isEmpty()) {
+				TMessage mensaje = this.getMessageRepository().findOne(logs.get(0).getMid());
+				mensaje.setFechaUltimoPush(fechaUltimoPush);
 
-			mensaje.setFechaUltimoPush(fechaUltimoPush);
-			TMessage clon = clonarMensaje(mensaje);
-			clon.setEstadoCambio(MessageStatusType.REINTENTO);
-			clon.setIntentos(0);
-			clon.setFechaUltimoPull(fechaUltimoPush);
+				TMessage clon = clonarMensaje(mensaje);
+				clon.setEstadoCambio(MessageStatusType.REINTENTO);
+				clon.setIntentos(0);
+				clon.setFechaUltimoPull(fechaUltimoPush);
+				clon.setFechaUltimoPush(null);
+				clon.setSyncCodigo(0);
+				clon.setSyncMensaje("");
+				clon.setSyncException("");
 
-			TEntity entidad = getEntityRepository().findOne(mensaje.getExternalId());
-			entidad.setFechaUltimoPush(fechaUltimoPush);
-			entidad.setSincronizado(false);
+				TEntity entidad = getEntityRepository().findOne(mensaje.getExternalId());
+				entidad.setFechaUltimoPush(fechaUltimoPush);
+				entidad.setSincronizado(false);
 
-			getMessageRepository().save(mensaje);
-			getMessageRepository().save(clon);
-			getEntityRepository().save(entidad);
+				getMessageRepository().save(mensaje);
+				getMessageRepository().save(clon);
+				getEntityRepository().save(entidad);
+			}
 		}
 	}
 
@@ -93,7 +93,7 @@ public abstract class BaseCorreccionesService<TEntity extends BaseEntity, TMessa
 
 		List<CorreccionCheckResponseDTO> list = this.check(tipoIntegracion, tipoMensaje, externalId);
 
-		//// @formatter:off
+		// @formatter:off
 		List<String> habilitados = list
 				.stream()
 				.filter(a -> a.isHabilitado())
@@ -102,32 +102,47 @@ public abstract class BaseCorreccionesService<TEntity extends BaseEntity, TMessa
 		// @formatter:on
 
 		LocalDateTime fechaUltimoPush = LocalDateTime.now();
-		
+
 		for (String e : habilitados) {
-			TMessage mensaje = getLastMessage(e);
+			//// @formatter:off
+			List<LogDTO> logs = this.getLogs(tipoIntegracion ,e)
+					.stream()
+					.filter( a -> !MessageType.X.equals(a.getType()))
+					.collect(Collectors.toList());
+ 			// @formatter:on
+			if (!logs.isEmpty()) {
+				TMessage mensaje = this.getMessageRepository().findOne(logs.get(0).getMid());
+				mensaje.setFechaUltimoPush(fechaUltimoPush);
 
-			mensaje.setFechaUltimoPush(fechaUltimoPush);
-			TMessage clon = clonarMensaje(mensaje);
-			clon.setEstadoCambio(MessageStatusType.REINTENTO);
-			clon.setIntentos(0);
-			clon.setFechaUltimoPull(fechaUltimoPush);
+				TMessage clon = clonarMensaje(mensaje);
+				clon.setTipoCambio(MessageType.C);
+				clon.setEstadoCambio(MessageStatusType.PENDIENTE);
+				clon.setIntentos(0);
+				clon.setFechaUltimoPull(fechaUltimoPush);
+				clon.setFechaUltimoPush(null);
+				clon.setSyncCodigo(0);
+				clon.setSyncMensaje("");
+				clon.setSyncException("");
+				clon.setId("");
 
-			TEntity entidad = getEntityRepository().findOne(mensaje.getExternalId());
-			entidad.setFechaUltimoPush(fechaUltimoPush);
-			entidad.setSincronizado(false);
+				TEntity entidad = getEntityRepository().findOne(mensaje.getExternalId());
+				entidad.setFechaUltimoPush(fechaUltimoPush);
+				entidad.setSincronizado(false);
+				entidad.setId("");
 
-			getMessageRepository().save(mensaje);
-			getMessageRepository().save(clon);
-			getEntityRepository().save(entidad);
+				getMessageRepository().save(mensaje);
+				getMessageRepository().save(clon);
+				getEntityRepository().save(entidad);
+			}
 		}
 	}
-	
+
 	@Transactional(readOnly = true)
 	public void update(IntegracionType tipoIntegracion, MessageType tipoMensaje, List<String> externalId) {
 
 		List<CorreccionCheckResponseDTO> list = this.check(tipoIntegracion, tipoMensaje, externalId);
 
-		//// @formatter:off
+		// @formatter:off
 		List<String> habilitados = list
 				.stream()
 				.filter(a -> a.isHabilitado())
@@ -136,107 +151,45 @@ public abstract class BaseCorreccionesService<TEntity extends BaseEntity, TMessa
 		// @formatter:on
 
 		LocalDateTime fechaUltimoPush = LocalDateTime.now();
-		
+
 		for (String e : habilitados) {
-			TMessage mensaje = getLastMessage(e);
+			//// @formatter:off
+			List<LogDTO> logs = this.getLogs(tipoIntegracion ,e)
+					.stream()
+					.filter( a -> !MessageType.X.equals(a.getType()))
+					.collect(Collectors.toList());
+ 			// @formatter:on
+			if (!logs.isEmpty()) {
+				TMessage mensaje = this.getMessageRepository().findOne(logs.get(0).getMid());
+				mensaje.setFechaUltimoPush(fechaUltimoPush);
 
-			mensaje.setFechaUltimoPush(fechaUltimoPush);
-			TMessage clon = clonarMensaje(mensaje);
-			clon.setEstadoCambio(MessageStatusType.REINTENTO);
-			clon.setIntentos(0);
-			clon.setFechaUltimoPull(fechaUltimoPush);
+				TMessage clon = clonarMensaje(mensaje);
+				clon.setTipoCambio(MessageType.U);
+				clon.setEstadoCambio(MessageStatusType.PENDIENTE);
+				clon.setIntentos(0);
+				clon.setFechaUltimoPull(fechaUltimoPush);
+				clon.setFechaUltimoPush(null);
+				clon.setSyncCodigo(0);
+				clon.setSyncMensaje("");
+				clon.setSyncException("");
 
-			TEntity entidad = getEntityRepository().findOne(mensaje.getExternalId());
-			entidad.setFechaUltimoPush(fechaUltimoPush);
-			entidad.setSincronizado(false);
+				TEntity entidad = getEntityRepository().findOne(mensaje.getExternalId());
+				entidad.setFechaUltimoPush(fechaUltimoPush);
+				entidad.setSincronizado(false);
 
-			getMessageRepository().save(mensaje);
-			getMessageRepository().save(clon);
-			getEntityRepository().save(entidad);
+				getMessageRepository().save(mensaje);
+				getMessageRepository().save(clon);
+				getEntityRepository().save(entidad);
+			}
 		}
 	}
-	
-	
-	
-	private TMessage getLastMessage(String externalId) {
-//		String sql = getSQLSelectLastMessage(externalId, mid).replace("{table_name}", getLogTableName());
-//		;
-//
-//		// @formatter:off
-//		val parametros = new MapSqlParameterSource()
-//				.addValue("externalId", externalId)
-//				.addValue("mid", mid);
-//		// @formatter:on
-//
-//		List<Long> mids = esbJdbcTemplate.queryForList(sql, parametros, Long.class);
-//		List<TMessage> rows = getMessageRepository().findAll(mids);
-
-		return null;
-	}
-
-	abstract protected TMessage crearMensaje(TEntity entidad);
-	
-	abstract protected TMessage clonarMensaje(TMessage a);
-
 
 	// -------------------------------------------------------------------------------------
 	// REINTENTAR
 	// -------------------------------------------------------------------------------------
-	public void generarUpdate(String externalId) {
-		LocalDateTime fechaUltimoPush = LocalDateTime.now();
-		TEntity entidad = getEntityRepository().findOne(externalId);
+	public List<CorreccionCheckResponseDTO> check(IntegracionType tipoIntegracion, MessageType tipoMensaje,
+			List<String> externalId) {
 
-		checkIfUpdateAllowed(entidad);
-
-		TMessage mensaje = crearMensaje(entidad);
-		entidad.setFechaUltimoPush(fechaUltimoPush);
-		entidad.setSincronizado(false);
-
-		getMessageRepository().save(mensaje);
-		getEntityRepository().save(entidad);
-	}
-
-	private void checkIfUpdateAllowed(BaseEntity entidad) {
-//		if (entidad == null) {
-//			throw new RuntimeException("El registro al cual le pretende generar un update, no existe");
-//		}
-//
-//		if (!entidad.isSincronizado()) {
-//			throw new RuntimeException(
-//					"El registro al cual le pretende generar un update, tiene pendiente una sincronización");
-//		}
-//
-//		List<LogDTO> logs = getLogs(entidad.getExternalId());
-//
-//		if (!logs.isEmpty()) {
-//			LogDTO log = logs.get(0);
-//
-//			if (log.getStatus() != MessageStatusType.INTEGRADO) {
-//				throw new RuntimeException(
-//						"El ultimo mensaje del registro al cual pretende generarle un update, se encuentra en estado "
-//								+ log.getStatus());
-//			}
-//		}
-	}
-
-	protected void poblarMessageEntity(BaseMessageEntity mensaje, BaseEntity entidad) {
-		LocalDateTime fechaUltimoPull = LocalDateTime.now();
-
-		mensaje.setTipoCambio(MessageType.U);
-		mensaje.setEstadoCambio(MessageStatusType.PENDIENTE);
-		mensaje.setIntentos(0);
-		mensaje.setFechaUltimoPull(fechaUltimoPull);
-		mensaje.setFechaUltimoPush(null);
-		mensaje.setSyncCodigo(0);
-		mensaje.setSyncMensaje("");
-		mensaje.setSyncException("");
-		mensaje.setExternalId(entidad.getExternalId());
-		mensaje.setId(entidad.getId());
-	}
-
-	public List<CorreccionCheckResponseDTO> check(
-
-			IntegracionType tipoIntegracion, MessageType tipoMensaje, List<String> externalId) {
 		List<CorreccionCheckResponseDTO> result = new ArrayList<>();
 		for (String e : externalId) {
 			//// @formatter:off
@@ -305,40 +258,54 @@ public abstract class BaseCorreccionesService<TEntity extends BaseEntity, TMessa
 		return dto;
 	}
 
+	// -------------------------------------------------------------------------------------
+	// GET LOGS
+	// -------------------------------------------------------------------------------------
 	private List<LogDTO> getLogs(IntegracionType tipoIntegracion, String externalId) {
 
-		BaseMensajesService<?, ?> service = this.getService(tipoIntegracion);
+		String sql = getSQLSelectLogs().replace("{table_name}", getLogTableName());
+		// @formatter:off
+		val parametros = new MapSqlParameterSource()
+				.addValue("externalId", externalId);
+		// @formatter:on
 
-		List<LogDTO> result = null;//service.getLogs(externalId);
+		List<LogDTO> result = esbJdbcTemplate.query(sql, parametros, new LogRowMapper());
 		return result;
 	}
 
-	private BaseMensajesService<?, ?> getService(IntegracionType tipoIntegracion) {
-		BaseMensajesService<?, ?> result;
-
-		switch (tipoIntegracion) {
-		case PEDIDOS:
-			result = this.pedidoService;
-			break;
-		case SALIDAS_TIENDA:
-			result = this.salidasTiendasService;
-			break;
-		case ORDENES_DE_PRODUCCION:
-			result = this.ordenesProduccionService;
-			break;
-		case ENTRADAS_PT:
-			result = this.entradasProductosService;
-			break;
-		case PRODUCTOS:
-			result = this.productosService;
-			break;
-		case LOCACIONES:
-			result = this.locacionesService;
-			break;
-		default:
-			throw new RuntimeException("Tipo de intetgración no concido");
-		}
-
-		return result;
+	private String getSQLSelectLogs() {
+	// @formatter:off
+	return  "\n" +
+			" WITH \n"+
+			" cte_00 AS \n"+
+			" ( \n"+
+			"     SELECT \n"+
+			"          CAST(a.fecha_ultimo_pull AS DATE) AS fecha \n"+
+			"         ,a.externalId \n"+
+			"         ,a.id \n"+
+			"         ,a.mid \n"+
+			"         ,a.tipo_cambio \n"+
+			"         ,a.estado_cambio \n"+
+			"         ,a.intentos \n"+
+			"         ,a.fecha_ultimo_pull \n"+
+			"         ,a.fecha_ultimo_push \n"+
+			"         ,a.sync_codigo \n"+
+			"         ,a.sync_mensaje \n"+
+			"         ,a.sync_exception \n"+
+			"         ,ROW_NUMBER() OVER(PARTITION BY a.externalId ORDER BY a.mid DESC) AS orden \n"+
+			"     FROM {table_name} a \n"+
+			"     WHERE  \n"+
+			"         0 = 0 \n"+
+			"     AND a.externalId = :externalId \n"+
+			" ) \n"+
+			" SELECT \n"+
+			"     a.* \n"+
+			" FROM cte_00 a \n"+
+			" ORDER BY \n"+
+			"     a.orden \n"+
+			" ";
+	// @formatter:on
 	}
+
+	abstract protected TMessage clonarMensaje(TMessage a);
 }

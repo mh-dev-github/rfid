@@ -8,13 +8,14 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.mh.api.mensajes.dto.LogDTO;
+import com.mh.api.mensajes.dto.LogRowMapper;
 import com.mh.api.mensajes.dto.SubTotalLogDTO;
+import com.mh.api.mensajes.dto.SubTotalLogRowMapper;
 import com.mh.model.esb.domain.esb.BaseEntity;
 import com.mh.model.esb.domain.msg.BaseMessageEntity;
 import com.mh.model.esb.domain.msg.MessageStatusType;
@@ -93,7 +94,7 @@ public abstract class BaseMensajesService<TEntity extends BaseEntity, TMessage e
 		log.info("tipoCambio", messageTypeToString(tipoCambio));
 		log.info("estadoCambio", messageStatusToString(estado));
 
-		List<SubTotalLogDTO> result = esbJdbcTemplate.query(sql, parametros, getSubTotalesRowMapper());
+		List<SubTotalLogDTO> result = esbJdbcTemplate.query(sql, parametros, new SubTotalLogRowMapper());
 		return result;
 	}
 
@@ -106,7 +107,7 @@ public abstract class BaseMensajesService<TEntity extends BaseEntity, TMessage e
 			List<String> externalId
 			// @formatter:on
 	) {
-		String sql = getSQLSelectLogsMasRecientes().replace("{table_name}", getLogTableName());
+		String sql = getSQLSelectLogs().replace("{table_name}", getLogTableName());
 
 		// @formatter:off
 		val parametros = new MapSqlParameterSource()
@@ -126,7 +127,7 @@ public abstract class BaseMensajesService<TEntity extends BaseEntity, TMessage e
 		log.info("externalId", externalId);
 		log.info("cualquierExternalId", (externalId == null) ? 1 : 0);
 
-		List<LogDTO> result = esbJdbcTemplate.query(sql, parametros, getLogsMasRecientesRowMapper());
+		List<LogDTO> result = esbJdbcTemplate.query(sql, parametros, new LogRowMapper());
 		return result;
 	}
 
@@ -186,7 +187,7 @@ public abstract class BaseMensajesService<TEntity extends BaseEntity, TMessage e
 		// @formatter:on
 	}
 
-	protected String getSQLSelectLogsMasRecientes() {
+	protected String getSQLSelectLogs() {
 		// @formatter:off
 		return  "\n" +
 				" WITH \n"+
@@ -225,50 +226,6 @@ public abstract class BaseMensajesService<TEntity extends BaseEntity, TMessage e
 				"     ,a.externalId \n"+
 				"     ,a.fecha_ultimo_pull \n"+
 				" ";
-		// @formatter:on
-	}
-
-	// -------------------------------------------------------------------------------------
-	//
-	// -------------------------------------------------------------------------------------
-	protected RowMapper<SubTotalLogDTO> getSubTotalesRowMapper() {
-		// @formatter:off
-		return (rs, rowNum) -> {
-			return SubTotalLogDTO
-			.builder()
-			.fecha(rs.getDate("fecha_ultimo_pull").toLocalDate())
-			.type(MessageType.valueOf(rs.getString("tipo_cambio")))
-			.status(MessageStatusType.valueOf(rs.getString("estado_cambio")))
-			.code(rs.getInt("sync_codigo"))
-			.message(rs.getString("sync_mensaje"))
-			.exception(rs.getString("sync_exception"))
-			.total(rs.getInt("total"))
-			.build();
-		};
-		// @formatter:on
-	}
-
-	protected RowMapper<LogDTO> getLogsMasRecientesRowMapper() {
-		// @formatter:off
-		return (rs, rowNum) -> {
-			return LogDTO
-			.builder()
-			.fecha(rs.getDate("fecha").toLocalDate())
-			.externalId(rs.getString("externalId"))
-			.id(rs.getString("id"))
-			.mid(rs.getLong("mid"))
-
-			.type(MessageType.valueOf(rs.getString("tipo_cambio")))
-			.status(MessageStatusType.valueOf(rs.getString("estado_cambio")))
-			.code(rs.getInt("sync_codigo"))
-			.message(rs.getString("sync_mensaje"))
-			.exception(rs.getString("sync_exception"))
-			.intentos(rs.getInt("intentos"))
-			
-			.fechaUltimoPull(rs.getTimestamp("fecha_ultimo_pull").toLocalDateTime())
-			.fechaUltimoPush((rs.getTimestamp("fecha_ultimo_push")!=null)?rs.getTimestamp("fecha_ultimo_push").toLocalDateTime():null)
-			.build();
-		};
 		// @formatter:on
 	}
 }

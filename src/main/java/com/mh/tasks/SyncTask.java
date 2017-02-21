@@ -19,7 +19,7 @@ public class SyncTask {
 
 	@Scheduled(cron =  "${sync.cron}")
 	public void cron() {
-		log.debug("cron");
+		log.debug("sync.cron");
 		rabbitTemplate.convertAndSend(RabbitMqConfig.EXCHANGE_NAME, RabbitMqConfig.ROUTING_KEY, new RequestDTO(RequestType.SYNC_ALL));
 	}
 }

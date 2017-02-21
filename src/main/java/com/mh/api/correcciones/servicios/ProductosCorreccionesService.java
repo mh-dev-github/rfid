@@ -28,33 +28,12 @@ public class ProductosCorreccionesService extends BaseCorreccionesService<Produc
 	}
 
 	@Override
-	protected ProductoMessage crearMensaje(Producto entidad) {
-		ProductoMessage mensaje = new ProductoMessage();
-
-		poblarMessageEntity(mensaje, entidad);
-
-		mensaje.setCompanyPrefix(entidad.getCompanyPrefix());
-		mensaje.setName(entidad.getName());
-		mensaje.setReference(entidad.getReference());
-		mensaje.setEan(entidad.getEan());
-		mensaje.setColor(entidad.getColor());
-		mensaje.setCodigoColor(entidad.getCodigoColor());
-		mensaje.setTalla(entidad.getTalla());
-		mensaje.setTipoProducto(entidad.getTipoProducto());
-		mensaje.setColeccion(entidad.getColeccion());
-		mensaje.setGrupoProducto(entidad.getGrupoProducto());
-		mensaje.setSubGrupoProducto(entidad.getSubGrupoProducto());
-		mensaje.setFabricante(entidad.getFabricante());
-		mensaje.setTemporada(entidad.getTemporada());
-		mensaje.setReferencia(entidad.getReferencia());
-		mensaje.setModelo(entidad.getModelo());
-		mensaje.setGenero(entidad.getGenero());
-
-		return mensaje;
+	protected ProductoMessage clonarMensaje(ProductoMessage a) {
+		return new ProductoMessage(a);
 	}
 
 	@Override
-	protected ProductoMessage clonarMensaje(ProductoMessage a) {
-		return new ProductoMessage(a);
+	protected String getLogTableName() {
+		return "msg.Productos";
 	}
 }

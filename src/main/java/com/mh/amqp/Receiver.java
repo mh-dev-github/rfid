@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.mh.amqp.dto.RequestDTO;
+import com.mh.amqp.handlers.ReportesLogHandler;
 import com.mh.amqp.handlers.EntradasProductoHandler;
 import com.mh.amqp.handlers.LocacionesHandler;
 import com.mh.amqp.handlers.OrdenesProduccionHandler;
@@ -38,6 +39,10 @@ public class Receiver {
 	private EntradasProductoHandler entradasProductosTerminadosHandler;
 	@Autowired
 	private SalidasTiendasHandler salidasTiendasHandler;
+
+	@Autowired
+	private ReportesLogHandler alertasLogHandler;
+
 	
 	public void receiveMessage(RequestDTO request) {
 		log.info("Procesando solicitud {}", request);
@@ -56,6 +61,7 @@ public class Receiver {
 			rootChain.setNextHandler(salidasTiendasHandler);
 			rootChain.setNextHandler(ordenesProduccionHandler);
 			rootChain.setNextHandler(entradasProductosTerminadosHandler);
+			rootChain.setNextHandler(alertasLogHandler);
 		}
 
 		return rootChain;
