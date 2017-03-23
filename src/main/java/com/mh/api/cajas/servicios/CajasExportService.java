@@ -29,38 +29,36 @@ public class CajasExportService {
 	private String DIRECTORIO_SALIDAS;
 
 	public void export(CajaDTO input) {
-		
+
 		Path path = null;
 		Locacion locacion = locacionRepository.findOne(input.getCodigoBodega());
-		
+
 		if (locacion != null) {
-			if(locacion.getDirectorioSalidas()== null){
+			if (locacion.getDirectorioSalidas() == null) {
 				locacion.setDirectorioSalidas("");
 			}
-			
-			//TODO
-			// @formatter:off
-//			locacion.setDirectorioSalidas(
-//					locacion.getDirectorioSalidas()
-//					.replace("\\\\Cobogapp12\\", "\\\\Aff2ce4140yhm\\esb\\")
-//					.replace("\\\\MHRD01\\", "\\\\Aff2ce4140yhm\\esb\\"));
-			// @formatter:on
 
 			if (!locacion.getDirectorioSalidas().isEmpty()) {
 				path = Paths.get(locacion.getDirectorioSalidas());
+				System.out.println("path = Paths.get(locacion.getDirectorioSalidas()); => " + path.toString());
 				if (!Files.isDirectory(path)) {
+					System.out.println("(!Files.isDirectory(path)) => " + (!Files.isDirectory(path)));
 					path = null;
 				}
 			}
 		}
 
 		if (path == null) {
+			System.out.println("(path == null) => " + (path == null));
 			path = Paths.get(DIRECTORIO_SALIDAS);
+			System.out.println("Paths.get(DIRECTORIO_SALIDAS) => " + path.toString());
 		}
 
 		log.debug("path:{}", path.toString());
-
+		System.out.println("path => " + path.toString());
+		
 		if (!Files.isDirectory(path)) {
+			System.out.println("(!Files.isDirectory(path)) => " + (!Files.isDirectory(path)));
 			throw new RuntimeException("No existe el directorio de salida " + path.toString());
 		}
 
@@ -88,6 +86,8 @@ public class CajasExportService {
 			fileTmp.toFile().renameTo(fileTxt.toFile());
 			Files.deleteIfExists(fileTmp);
 		} catch (IOException e) {
+			log.error("Ocurrio el siguiente error", e);
+			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
 	}

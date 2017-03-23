@@ -1,4 +1,4 @@
-package com.mh.api.alertas.servicios;
+package com.mh.api.alertas.servicios.logs;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,7 +15,7 @@ import com.mh.model.esb.domain.msg.BaseMessageEntity;
 
 import lombok.val;
 
-public abstract class BaseAlertasService<TEntity extends BaseEntity, TMessage extends BaseMessageEntity> {
+public abstract class BaseLogsService<TEntity extends BaseEntity, TMessage extends BaseMessageEntity> {
 	@Qualifier("esbJdbcTemplate")
 	@Autowired
 	protected NamedParameterJdbcTemplate esbJdbcTemplate;
@@ -25,14 +25,7 @@ public abstract class BaseAlertasService<TEntity extends BaseEntity, TMessage ex
 	// -------------------------------------------------------------------------------------
 	// AUDITAR
 	// -------------------------------------------------------------------------------------
-	public List<LogDTO> alertar(LocalDateTime fechaDesde, LocalDateTime fechaHasta) {
-
-		List<LogDTO> result = this.getLogs(fechaDesde, fechaHasta);
-
-		return result;
-	}
-
-	private List<LogDTO> getLogs(LocalDateTime fechaDesde, LocalDateTime fechaHasta) {
+	public List<LogDTO> getLogs(LocalDateTime fechaDesde, LocalDateTime fechaHasta) {
 
 		String sql = getSQLSelectLogs().replace("{table_name}", getLogTableName());
 		// @formatter:off

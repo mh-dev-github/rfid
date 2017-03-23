@@ -27,7 +27,7 @@ public class SerialesController {
 	
 	@RequestMapping(method = RequestMethod.POST)
 	ResponseEntity<?> addSerial(@RequestBody SerialesDTO input) {
-		log.debug("Requesting for path addSerial");
+		log.debug("Requesting for path addSerial:{}",input.toString());
 		HttpHeaders httpHeaders = new HttpHeaders();
 
 		List<SerialDTO> list = input.getItems();

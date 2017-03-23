@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.mh.amqp.dto.RequestDTO;
-import com.mh.amqp.handlers.ReportesLogHandler;
+import com.mh.amqp.handlers.NotificacionesLogHandler;
 import com.mh.amqp.handlers.EntradasProductoHandler;
 import com.mh.amqp.handlers.LocacionesHandler;
 import com.mh.amqp.handlers.OrdenesProduccionHandler;
@@ -41,7 +41,7 @@ public class Receiver {
 	private SalidasTiendasHandler salidasTiendasHandler;
 
 	@Autowired
-	private ReportesLogHandler alertasLogHandler;
+	private NotificacionesLogHandler alertasLogHandler;
 
 	
 	public void receiveMessage(RequestDTO request) {

@@ -25,7 +25,7 @@ public class InventarioController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	ResponseEntity<?> addInventario(@RequestBody InventariosDTO input) {
-		log.debug("Requesting for path addInventario");
+		log.debug("Requesting for path addInventario:{}", input.toString());
 		HttpHeaders httpHeaders = new HttpHeaders();
 
 		InventarioDTO inventario = input.getInventario();

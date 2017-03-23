@@ -42,7 +42,7 @@ public abstract class BaseCorreccionesService<TEntity extends BaseEntity, TMessa
 	// -------------------------------------------------------------------------------------
 	//
 	// -------------------------------------------------------------------------------------
-	@Transactional(readOnly = true)
+	@Transactional(value = "transactionManager")
 	public void retry(IntegracionType tipoIntegracion, MessageType tipoMensaje, List<String> externalId) {
 
 		List<CorreccionCheckResponseDTO> list = this.check(tipoIntegracion, tipoMensaje, externalId);
@@ -88,7 +88,7 @@ public abstract class BaseCorreccionesService<TEntity extends BaseEntity, TMessa
 		}
 	}
 
-	@Transactional(readOnly = true)
+	@Transactional(value = "transactionManager")
 	public void create(IntegracionType tipoIntegracion, MessageType tipoMensaje, List<String> externalId) {
 
 		List<CorreccionCheckResponseDTO> list = this.check(tipoIntegracion, tipoMensaje, externalId);
@@ -137,7 +137,7 @@ public abstract class BaseCorreccionesService<TEntity extends BaseEntity, TMessa
 		}
 	}
 
-	@Transactional(readOnly = true)
+	@Transactional(value = "transactionManager")
 	public void update(IntegracionType tipoIntegracion, MessageType tipoMensaje, List<String> externalId) {
 
 		List<CorreccionCheckResponseDTO> list = this.check(tipoIntegracion, tipoMensaje, externalId);

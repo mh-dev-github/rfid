@@ -251,9 +251,11 @@ public abstract class PushService<T extends PayloadDTO, S extends BaseMessageEnt
 		mensaje.error(syncCodigo, syncMensaje, e, fechaUltimoPush);
 
 		S clon = clonarMensaje(mensaje);
+		clon.error(syncCodigo, syncMensaje, e, fechaUltimoPush);
 		clon.setEstadoCambio(nuevoEstadoDespuesDeErrorIntegracion(mensaje, syncCodigo, syncMensaje));
 		clon.setIntentos(mensaje.getIntentos() + 1);
 		clon.setFechaUltimoPull(fechaSiguientePull(fechaUltimoPush));
+		
 
 		V entidad = getRepository().findOne(mensaje.getExternalId());
 		entidad.setFechaUltimoPush(fechaUltimoPush);

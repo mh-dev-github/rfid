@@ -25,7 +25,7 @@ public class CajasController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	ResponseEntity<?> addCaja(@RequestBody CajasDTO input) {
-		log.debug("Requesting for path addCaja");
+		log.debug("Requesting for path addCaja:{}", input.toString());
 		HttpHeaders httpHeaders = new HttpHeaders();
 
 		CajaDTO caja = input.getCaja();

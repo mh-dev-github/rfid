@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.mh.amqp.dto.RequestDTO;
-import com.mh.api.alertas.servicios.AlertasLogService;
+import com.mh.api.alertas.servicios.NotificacionesLogService;
 import com.mh.core.patterns.AbstractHandler;
 
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class NotificacionesLogHandler extends AbstractHandler<RequestDTO> {
 	@Autowired
-	private AlertasLogService service;
+	private NotificacionesLogService service;
 
 	@Override
 	protected boolean canHandleRequest(RequestDTO request) {
