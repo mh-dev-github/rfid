@@ -1,6 +1,7 @@
 package com.mh.api.sync.servicios.pull;
 
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Service;
 
 import com.mh.api.sync.servicios.pull.dto.PedidoPullDTO;
@@ -11,13 +12,13 @@ public class PedidosPullService extends PullService<PedidoPullDTO> {
 
 	@Override
 	protected IntegracionType getIntegracionType() {
-		return IntegracionType.PEDIDOS;
+		return IntegracionType.DESPACHOS;
 	}
 
 	@Override
 	protected String getSQLSelectFromErp() {
 		// @formatter:off
-		return "" 
+		String result = "" 
 		+" WITH "
 		+" cte_00 AS "
 		+" ( "
@@ -32,6 +33,7 @@ public class PedidosPullService extends PullService<PedidoPullDTO> {
 		+"          "
 		+"         ,COALESCE(LTRIM(RTRIM(a.CLIENTE)),'') AS CLIENTE "
 		+"         ,COALESCE(LTRIM(RTRIM(a.AGENCIA)),'') AS AGENCIA "
+		+"         ,a.DATA_PARA_TRANSFERENCIA "		
 		+"     FROM dbo.MH_PEDIDOS_PEND_CON_TALLAS1_RFID a "
 		+" ), "
 		+" cte_01 AS "
@@ -49,16 +51,30 @@ public class PedidosPullService extends PullService<PedidoPullDTO> {
 		+"     		,a.AGENCIA AS Agencia "
 		+"     		,a.BODEGA_ORIGEN "
 		+"     		,a.BODEGA_DESTINO "
+		+"     		,GETDATE() AS fecha_ultimo_pull "
+		+"     		,a.DATA_PARA_TRANSFERENCIA "
+		+"     		,DATEADD(MINUTE,-2,:fechaUltimoPull) AS femi "
+		+"     		,DATEADD(MINUTE,-2,GETDATE()) AS fema "		
 		+"  "
 		+" 		FROM cte_00 a "
 		+" ) "
 		+" SELECT "
 		+"     * "
 		+" FROM cte_01 a "
+		+" WHERE "
+		+"     a.DATA_PARA_TRANSFERENCIA >= femi "
+		+" AND a.DATA_PARA_TRANSFERENCIA <= fema"
 		+"  ";
 		// @formatter:on
+		return result;
 	}
 	
+	@Override
+	protected MapSqlParameterSource buildSqlParameterSource() {
+		MapSqlParameterSource paramSource = super.buildSqlParameterSource();
+		paramSource.addValue("fechaUltimoPull", getFechaUltimoPull());
+		return paramSource;
+	}
 	@Override
 	protected String getSQLTruncateStageTable() {
 		return "TRUNCATE TABLE stage.Despachos";
@@ -69,9 +85,9 @@ public class PedidosPullService extends PullService<PedidoPullDTO> {
 		// @formatter:off
 		return "" 
 		+ " INSERT INTO stage.Despachos" 
-		+ "    (externalId,sourceId,destinationId,cliente,agencia,sku,amount,expectedShipmentDate,BODEGA_ORIGEN,BODEGA_DESTINO)"
+		+ "    (externalId,sourceId,destinationId,cliente,agencia,sku,amount,expectedShipmentDate,BODEGA_ORIGEN,BODEGA_DESTINO,fecha_ultimo_pull)"
 		+ "	VALUES" 
-		+ "    (:externalId,:sourceId,:destinationId,:cliente,:agencia,:sku,:amount,:expectedShipmentDate,:bodegaOrigen,:bodegaDestino)";		
+		+ "    (:externalId,:sourceId,:destinationId,:cliente,:agencia,:sku,:amount,:expectedShipmentDate,:bodegaOrigen,:bodegaDestino,:fechaUltimoPull)";		
 		// @formatter:on
 	}
 
@@ -84,7 +100,7 @@ public class PedidosPullService extends PullService<PedidoPullDTO> {
 	protected RowMapper<PedidoPullDTO> getRowMapper() {
 		// @formatter:off
 		return (rs, rowNum) -> {
-			return PedidoPullDTO
+			PedidoPullDTO result = PedidoPullDTO
 				.builder()
 				.externalId(rs.getString("externalId"))
 
@@ -98,8 +114,10 @@ public class PedidosPullService extends PullService<PedidoPullDTO> {
 				.expectedShipmentDate(rs.getString("expectedShipmentDate"))				
 				.bodegaOrigen(rs.getString("BODEGA_ORIGEN"))
 				.bodegaDestino(rs.getString("BODEGA_DESTINO"))
+				.fechaUltimoPull(rs.getTimestamp("fecha_ultimo_pull").toLocalDateTime())	
 				
 				.build();
+			return result;
 		};
 		// @formatter:on
 	}

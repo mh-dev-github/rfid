@@ -9,8 +9,10 @@ public enum IntegracionType {
 	ENTRADAS_PT("ENTRADAS DE PRODUCTO TERMINADO"),
 
 	ALERTAS_LOGS("ALERTAS LOGS"),
-	CONSOLIDADOS_LOGS("CONSOLIDADO LOGS");
-
+	CONSOLIDADOS_LOGS("CONSOLIDADO LOGS"),
+	
+	DESPACHOS("DESPACHOS");
+	
 	IntegracionType(String nombre) {
 		this.nombrePlural = nombre;
 	}

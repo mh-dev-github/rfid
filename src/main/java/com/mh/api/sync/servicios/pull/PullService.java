@@ -63,7 +63,9 @@ public abstract class PullService<T> {
 	}
 
 	protected LocalDateTime getFechaUltimoPull() {
-		return getIntegracion(getIntegracionType()).getFechaUltimoPull();
+		val integration = getIntegracion(getIntegracionType());
+		val result = integration.getFechaUltimoPull();
+		return result;
 	}
 
 	// -------------------------------------------------------------------------------------
