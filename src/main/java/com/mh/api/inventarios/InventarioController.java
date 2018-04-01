@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mh.api.inventarios.dto.InventarioDTO;
-import com.mh.api.inventarios.dto.InventariosDTO;
-import com.mh.api.inventarios.servicios.InventariosExportService;
+import com.mh.servicios.inventarios.InventariosExportService;
+import com.mh.servicios.inventarios.InventariosExportService.InventarioDTO;
+import com.mh.servicios.inventarios.InventariosExportService.InventariosDTO;
 
 import lombok.extern.slf4j.Slf4j;
 

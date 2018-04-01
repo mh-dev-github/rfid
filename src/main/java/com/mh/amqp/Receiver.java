@@ -3,16 +3,17 @@ package com.mh.amqp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.mh.amqp.dto.RequestDTO;
-import com.mh.amqp.handlers.NotificacionesLogHandler;
-import com.mh.amqp.handlers.EntradasProductoHandler;
-import com.mh.amqp.handlers.LocacionesHandler;
-import com.mh.amqp.handlers.OrdenesProduccionHandler;
-import com.mh.amqp.handlers.PedidosHandler;
-import com.mh.amqp.handlers.ProductosHandler;
-import com.mh.amqp.handlers.SalidasTiendasHandler;
-import com.mh.amqp.handlers.SyncAllHandler;
-import com.mh.core.patterns.AbstractHandler;
+import com.mh.amqp.handlers.AbstractHandler;
+import com.mh.dto.amqp.RequestDTO;
+import com.mh.notificaciones.NotificacionesLogHandler;
+import com.mh.servicios.entradasProducto.EntradasProductoHandler;
+import com.mh.servicios.locaciones.LocacionesHandler;
+import com.mh.servicios.ordenesProduccion.OrdenesProduccionHandler;
+import com.mh.servicios.pedidos.PedidosHandler;
+import com.mh.servicios.productos.ProductosHandler;
+import com.mh.servicios.salidasTienda.SalidasTiendasHandler;
+import com.mh.servicios.ventas.VentasHandler;
+import com.mh.tasks.SyncAllHandler;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,16 +40,19 @@ public class Receiver {
 	private EntradasProductoHandler entradasProductosTerminadosHandler;
 	@Autowired
 	private SalidasTiendasHandler salidasTiendasHandler;
+	@Autowired
+	private VentasHandler ventasHandler;
 
 	@Autowired
 	private NotificacionesLogHandler alertasLogHandler;
 
-	
 	public void receiveMessage(RequestDTO request) {
 		log.info("Procesando solicitud {}", request);
 
 		AbstractHandler<RequestDTO> root = getRootChain();
-		root.receiveRequest(request);
+		if (root != null) {
+			root.receiveRequest(request);
+		}
 	}
 
 	private AbstractHandler<RequestDTO> getRootChain() {
@@ -61,6 +65,7 @@ public class Receiver {
 			rootChain.setNextHandler(salidasTiendasHandler);
 			rootChain.setNextHandler(ordenesProduccionHandler);
 			rootChain.setNextHandler(entradasProductosTerminadosHandler);
+			rootChain.setNextHandler(ventasHandler);
 			rootChain.setNextHandler(alertasLogHandler);
 		}
 

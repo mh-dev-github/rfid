@@ -15,20 +15,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mh.amqp.RabbitMqConfig;
-import com.mh.amqp.dto.RequestDTO;
-import com.mh.amqp.dto.RequestType;
-import com.mh.api.correcciones.dto.CorreccionCheckResponseDTO;
-import com.mh.api.correcciones.servicios.BaseCorreccionesService;
-import com.mh.api.correcciones.servicios.EntradasProductoCorreccionesService;
-import com.mh.api.correcciones.servicios.LocacionesCorreccionesService;
-import com.mh.api.correcciones.servicios.OrdenesProduccionCorreccionesService;
-import com.mh.api.correcciones.servicios.PedidosCorreccionesService;
-import com.mh.api.correcciones.servicios.ProductosCorreccionesService;
-import com.mh.api.correcciones.servicios.SalidasTiendaCorreccionesService;
+import com.mh.dto.amqp.RequestDTO;
+import com.mh.dto.amqp.RequestType;
 import com.mh.model.esb.domain.esb.BaseEntity;
 import com.mh.model.esb.domain.esb.IntegracionType;
 import com.mh.model.esb.domain.msg.BaseMessageEntity;
 import com.mh.model.esb.domain.msg.MessageType;
+import com.mh.services.CorreccionCheckResponseDTO;
+import com.mh.services.CorreccionesService;
+import com.mh.servicios.entradasProducto.EntradasProductoCorreccionesService;
+import com.mh.servicios.locaciones.LocacionesCorreccionesService;
+import com.mh.servicios.ordenesProduccion.OrdenesProduccionCorreccionesService;
+import com.mh.servicios.pedidos.PedidosCorreccionesService;
+import com.mh.servicios.productos.ProductosCorreccionesService;
+import com.mh.servicios.salidasTienda.SalidasTiendaCorreccionesService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -58,8 +58,8 @@ public class CorreccionesController {
 	@Autowired
 	LocacionesCorreccionesService locacionesService;
 	
-	private BaseCorreccionesService<? extends BaseEntity, ? extends BaseMessageEntity> getService(IntegracionType tipoIntegracion) {
-		BaseCorreccionesService<? extends BaseEntity, ? extends BaseMessageEntity> result;
+	private CorreccionesService<? extends BaseEntity, ? extends BaseMessageEntity> getService(IntegracionType tipoIntegracion) {
+		CorreccionesService<? extends BaseEntity, ? extends BaseMessageEntity> result;
 
 		switch (tipoIntegracion) {
 		case PEDIDOS:

@@ -1,0 +1,16 @@
+package com.mh.dto.amqp;
+
+public enum RequestType {
+	SYNC_ALL,
+	PULL,
+	PUSH,
+	PUSH_UPDATE,
+	CHECK,
+	
+	CORRECCION_REINTENTO,
+	CORRECCION_CREATE,
+	CORRECCION_UPDATE,
+	
+	ALERTAS_LOGS,
+	CONSOLIDADOS_LOGS
+}

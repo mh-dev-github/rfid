@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mh.api.cajas.dto.CajaDTO;
 import com.mh.api.cajas.dto.CajasDTO;
-import com.mh.api.cajas.servicios.CajasExportService;
+import com.mh.servicios.cajas.CajasExportService;
 
 import lombok.extern.slf4j.Slf4j;
 

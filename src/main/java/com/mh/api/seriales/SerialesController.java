@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mh.api.seriales.dto.SerialDTO;
 import com.mh.api.seriales.dto.SerialesDTO;
-import com.mh.api.seriales.servicios.SerialesExportService;
+import com.mh.servicios.seriales.SerialesExportService;
 
 import lombok.extern.slf4j.Slf4j;
 

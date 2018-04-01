@@ -1,0 +1,57 @@
+{"properties": [
+  {
+    "name": "spring.erp.datasource.url",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.erp.datasource.url'"
+  },
+  {
+    "name": "spring.erp.datasource.driver-class-name",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.erp.datasource.driver-class-name'"
+  },
+  {
+    "name": "spring.erp.datasource.password",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.erp.datasource.password'"
+  },
+  {
+    "name": "spring.erp.datasource.username",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.erp.datasource.username'"
+  },
+  {
+    "name": "spring.stage.datasource.url",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.stage.datasource.url'"
+  },
+  {
+    "name": "spring.stage.datasource.username",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.stage.datasource.username'"
+  },
+  {
+    "name": "spring.stage.datasource.password",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.stage.datasource.password'"
+  },
+  {
+    "name": "spring.stage.datasource.driver-class-name",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.stage.datasource.driver-class-name'"
+  },
+  {
+    "name": "custom.rest.connection.connection-request-timeout",
+    "type": "java.lang.String",
+    "description": "A description for 'custom.rest.connection.connection-request-timeout'"
+  },
+  {
+    "name": "custom.rest.connection.connect-timeout",
+    "type": "java.lang.String",
+    "description": "A description for 'custom.rest.connection.connect-timeout'"
+  },
+  {
+    "name": "custom.rest.connection.read-timeout",
+    "type": "java.lang.String",
+    "description": "A description for 'custom.rest.connection.read-timeout'"
+  }
+]}

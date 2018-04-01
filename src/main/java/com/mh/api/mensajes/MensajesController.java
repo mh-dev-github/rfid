@@ -23,18 +23,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mh.api.mensajes.dto.LogDTO;
 import com.mh.api.mensajes.dto.SubTotalLogDTO;
-import com.mh.api.mensajes.servicios.BaseMensajesService;
-import com.mh.api.mensajes.servicios.EntradasProductoMensajesService;
-import com.mh.api.mensajes.servicios.LocacionesMensajesService;
-import com.mh.api.mensajes.servicios.OrdenesProduccionMensajesService;
-import com.mh.api.mensajes.servicios.PedidosMensajesService;
-import com.mh.api.mensajes.servicios.ProductosMensajesService;
-import com.mh.api.mensajes.servicios.SalidasTiendaMensajesService;
 import com.mh.model.esb.domain.esb.BaseEntity;
 import com.mh.model.esb.domain.esb.IntegracionType;
 import com.mh.model.esb.domain.msg.BaseMessageEntity;
 import com.mh.model.esb.domain.msg.MessageStatusType;
 import com.mh.model.esb.domain.msg.MessageType;
+import com.mh.services.MensajesService;
+import com.mh.servicios.entradasProducto.EntradasProductoMensajesService;
+import com.mh.servicios.locaciones.LocacionesMensajesService;
+import com.mh.servicios.ordenesProduccion.OrdenesProduccionMensajesService;
+import com.mh.servicios.pedidos.PedidosMensajesService;
+import com.mh.servicios.productos.ProductosMensajesService;
+import com.mh.servicios.salidasTienda.SalidasTiendaMensajesService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -62,8 +62,8 @@ public class MensajesController {
 	@Autowired
 	LocacionesMensajesService locacionesService;
 
-	private BaseMensajesService<? extends BaseEntity, ? extends BaseMessageEntity> getService(IntegracionType tipoIntegracion) {
-		BaseMensajesService<? extends BaseEntity, ? extends BaseMessageEntity> result;
+	private MensajesService<? extends BaseEntity, ? extends BaseMessageEntity> getService(IntegracionType tipoIntegracion) {
+		MensajesService<? extends BaseEntity, ? extends BaseMessageEntity> result;
 
 		switch (tipoIntegracion) {
 		case PEDIDOS:

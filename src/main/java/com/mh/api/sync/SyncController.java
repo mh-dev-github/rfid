@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mh.amqp.RabbitMqConfig;
-import com.mh.amqp.dto.RequestDTO;
-import com.mh.amqp.dto.RequestType;
+import com.mh.dto.amqp.RequestDTO;
+import com.mh.dto.amqp.RequestType;
 import com.mh.model.esb.domain.esb.IntegracionType;
 
 import lombok.extern.slf4j.Slf4j;
