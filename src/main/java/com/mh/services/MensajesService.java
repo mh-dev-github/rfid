@@ -30,8 +30,8 @@ import lombok.extern.slf4j.Slf4j;
  *  
  * @author arosorio@gmail.com
  *
- * @param <E>
- * @param <M>
+ * @param <E> Entidad
+ * @param <M> Mensaje
  */
 @Service
 @Slf4j

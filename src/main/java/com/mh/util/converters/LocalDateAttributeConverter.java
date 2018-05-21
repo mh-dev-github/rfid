@@ -7,7 +7,7 @@ import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 /**
- * AttributeConverter LocalDate <-> Date
+ * AttributeConverter LocalDate &#60;=&#62; Date
  * 
  * @author arosorio@gmail.com
  *

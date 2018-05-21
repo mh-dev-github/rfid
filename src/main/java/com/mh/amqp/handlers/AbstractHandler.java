@@ -5,7 +5,7 @@ package com.mh.amqp.handlers;
  * 
  * @author arosorio@gmail.com
  *
- * @param <T> 
+ * @param <T> Objetoi que debe ser procesado por la cadena de Handlers 
  * 
  * @see <a href="https://sourcemaking.com/design_patterns/decorator">Decorator Design Pattern</a>
  */

@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
  * 
  * @author arosorio@gmail.com
  *
- * @param <T>
+ * @param <T> Entidad
  */
 
 @Slf4j

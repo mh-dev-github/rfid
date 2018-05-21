@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
  * 
  * @author arosorio@gmail.com
  *
- * @param <T>
+ * @param <T> Entidad
  */
 public abstract class BaseSyncService<T> {
 

@@ -7,7 +7,7 @@ import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 /**
- * AttributeConverter LocalTime <-> Time
+ * AttributeConverter LocalTime &#60;=&#62; Time
  * 
  * @author arosorio@gmail.com
  *

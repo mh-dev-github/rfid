@@ -39,12 +39,12 @@ import lombok.extern.slf4j.Slf4j;
  * 
  * @author arosorio@gmail.com
  *
- * @param <T>
- * @param <S>
- * @param <V>
+ * @param <T> Objeto que se va a enviar a destino
+ * @param <M> Mensaje
+ * @param <E> Entidad
  */
 @Slf4j
-public abstract class PushService<T extends PayloadDTO, S extends BaseMessageEntity, V extends BaseEntity>
+public abstract class PushService<T extends PayloadDTO, M extends BaseMessageEntity, E extends BaseEntity>
 		extends BaseSyncService<T> {
 	protected PushService() {
 		super();
@@ -62,9 +62,9 @@ public abstract class PushService<T extends PayloadDTO, S extends BaseMessageEnt
 	// -------------------------------------------------------------------------------------
 	//
 	// -------------------------------------------------------------------------------------
-	abstract protected JpaRepository<S, Long> getMessageRepository();
+	abstract protected JpaRepository<M, Long> getMessageRepository();
 
-	abstract protected JpaRepository<V, String> getRepository();
+	abstract protected JpaRepository<E, String> getRepository();
 
 	abstract protected boolean isRoundRobin();
 
@@ -87,7 +87,7 @@ public abstract class PushService<T extends PayloadDTO, S extends BaseMessageEnt
 	// -------------------------------------------------------------------------------------
 	//
 	// -------------------------------------------------------------------------------------
-	abstract protected PayloadDTO payload(S mensaje);
+	abstract protected PayloadDTO payload(M mensaje);
 
 	// -------------------------------------------------------------------------------------
 	// PUSH
@@ -111,9 +111,9 @@ public abstract class PushService<T extends PayloadDTO, S extends BaseMessageEnt
 	}
 
 	public boolean pushBatch(RequestDTO request, LocalDateTime fechaUltimoPull) {
-		List<S> mensajes = getPendingChanges(request, fechaUltimoPull);
+		List<M> mensajes = getPendingChanges(request, fechaUltimoPull);
 
-		for (S mensaje : mensajes) {
+		for (M mensaje : mensajes) {
 			if (MessageType.C.equals(mensaje.getTipoCambio())) {
 				post(mensaje);
 			} else {
@@ -123,7 +123,7 @@ public abstract class PushService<T extends PayloadDTO, S extends BaseMessageEnt
 		return (mensajes.size() == getPendingChangesBatchSize());
 	}
 
-	private List<S> getPendingChanges(RequestDTO request, LocalDateTime fechaUltimoPull) {
+	private List<M> getPendingChanges(RequestDTO request, LocalDateTime fechaUltimoPull) {
 
 		String sql = getSQLSelectFromPendingChanges(request);
 
@@ -134,7 +134,7 @@ public abstract class PushService<T extends PayloadDTO, S extends BaseMessageEnt
 		// @formatter:on
 
 		List<Long> mids = esbJdbcTemplate.queryForList(sql, parametros, Long.class);
-		List<S> rows = getMessageRepository().findAll(mids);
+		List<M> rows = getMessageRepository().findAll(mids);
 
 		return rows;
 	}
@@ -145,7 +145,7 @@ public abstract class PushService<T extends PayloadDTO, S extends BaseMessageEnt
 	// POST
 	// -------------------------------------------------------------------------------------
 	@Transactional(value = "transactionManager")
-	protected void post(S mensaje) {
+	protected void post(M mensaje) {
 		if (conciliarPost(mensaje)) {
 			return;
 		}
@@ -153,7 +153,7 @@ public abstract class PushService<T extends PayloadDTO, S extends BaseMessageEnt
 		exchange(mensaje.getMid(), url, HttpMethod.POST, createRequestEntity(mensaje), getResponseEntityClass());
 	}
 
-	private boolean conciliarPost(S mensaje) {
+	private boolean conciliarPost(M mensaje) {
 		if (!MessageType.C.equals(mensaje.getTipoCambio())) {
 			return false;
 		}
@@ -170,7 +170,7 @@ public abstract class PushService<T extends PayloadDTO, S extends BaseMessageEnt
 	// PUT
 	// -------------------------------------------------------------------------------------
 	@Transactional(value = "transactionManager")
-	protected void put(S mensaje) {
+	protected void put(M mensaje) {
 		String url = getApiURI() + "/" + mensaje.getId();
 		exchange(mensaje.getMid(), url, HttpMethod.PUT, createRequestEntity(mensaje), getResponseEntityClass());
 	}
@@ -178,7 +178,7 @@ public abstract class PushService<T extends PayloadDTO, S extends BaseMessageEnt
 	// -------------------------------------------------------------------------------------
 	// EXCHANGE
 	// -------------------------------------------------------------------------------------
-	protected HttpEntity<?> createRequestEntity(S mensaje) {
+	protected HttpEntity<?> createRequestEntity(M mensaje) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.set(HTTP_HEADER_AUTHORIZATION, getApiTokenAuthorization());
@@ -219,8 +219,8 @@ public abstract class PushService<T extends PayloadDTO, S extends BaseMessageEnt
 	// -------------------------------------------------------------------------------------
 	protected void proccesSuccessIntegration(long mid, String id) {
 		LocalDateTime fechaUltimoPush = LocalDateTime.now();
-		S mensaje = getMessageRepository().findOne(mid);
-		V entidad = getRepository().findOne(mensaje.getExternalId());
+		M mensaje = getMessageRepository().findOne(mid);
+		E entidad = getRepository().findOne(mensaje.getExternalId());
 
 		mensaje.enviado(id, fechaUltimoPush);
 		entidad.enviado(id, fechaUltimoPush);
@@ -256,18 +256,18 @@ public abstract class PushService<T extends PayloadDTO, S extends BaseMessageEnt
 
 	private void proccesErrorIntegration(long mid, int syncCodigo, String syncMensaje, RuntimeException e) {
 		LocalDateTime fechaUltimoPush = LocalDateTime.now();
-		S mensaje = getMessageRepository().findOne(mid);
+		M mensaje = getMessageRepository().findOne(mid);
 
 		mensaje.error(syncCodigo, syncMensaje, e, fechaUltimoPush);
 
-		S clon = clonarMensaje(mensaje);
+		M clon = clonarMensaje(mensaje);
 		clon.error(syncCodigo, syncMensaje, e, fechaUltimoPush);
 		clon.setEstadoCambio(nuevoEstadoDespuesDeErrorIntegracion(mensaje, syncCodigo, syncMensaje));
 		clon.setIntentos(mensaje.getIntentos() + 1);
 		clon.setFechaUltimoPull(fechaSiguientePull(fechaUltimoPush));
 		
 
-		V entidad = getRepository().findOne(mensaje.getExternalId());
+		E entidad = getRepository().findOne(mensaje.getExternalId());
 		entidad.setFechaUltimoPush(fechaUltimoPush);
 		entidad.setSincronizado(false);
 
@@ -280,7 +280,7 @@ public abstract class PushService<T extends PayloadDTO, S extends BaseMessageEnt
 		return fechaUltimoPush.plusMinutes(1).truncatedTo(ChronoUnit.MINUTES);
 	}
 
-	protected MessageStatusType nuevoEstadoDespuesDeErrorIntegracion(S mensaje, int syncCodigo, String syncMensaje) {
+	protected MessageStatusType nuevoEstadoDespuesDeErrorIntegracion(M mensaje, int syncCodigo, String syncMensaje) {
 		MessageStatusType estadoCambio;
 		if (mensaje.getIntentos() >= getNumeroMaximoReintentos()) {
 			estadoCambio = MessageStatusType.DESCARTADO;
@@ -294,5 +294,5 @@ public abstract class PushService<T extends PayloadDTO, S extends BaseMessageEnt
 		return estadoCambio;
 	}
 
-	abstract protected S clonarMensaje(S a);
+	abstract protected M clonarMensaje(M a);
 }

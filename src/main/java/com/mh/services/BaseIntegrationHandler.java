@@ -19,8 +19,6 @@ import lombok.extern.slf4j.Slf4j;
  * Es responsabilidad de las clases especilizadas instanciar los servicios adecuados.  
  * 
  * @author arosorio@gmail.com
- *
- * @param <T> 
  * 
  * @see <a href="https://sourcemaking.com/design_patterns/decorator">Decorator Design Pattern</a>
  */

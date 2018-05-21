@@ -8,7 +8,7 @@ import javax.persistence.Converter;
 
 
 /**
- * AttributeConverter LocalDateTime <-> Timestamp
+ * AttributeConverter LocalDateTime &#60;=&#62; Timestamp
  * 
  * @author arosorio@gmail.com
  *
