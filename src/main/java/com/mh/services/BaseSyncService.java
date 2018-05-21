@@ -5,6 +5,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.web.client.RestTemplate;
 
+
+/**
+ * Clase base de todos los servicios de sincronización
+ * 
+ * @author arosorio@gmail.com
+ *
+ * @param <T>
+ */
 public abstract class BaseSyncService<T> {
 
 	public static final String HTTP_HEADER_AUTHORIZATION = "Authorization";

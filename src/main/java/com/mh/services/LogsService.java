@@ -15,7 +15,16 @@ import com.mh.model.esb.domain.msg.BaseMessageEntity;
 
 import lombok.val;
 
-public abstract class LogsService<TEntity extends BaseEntity, TMessage extends BaseMessageEntity> {
+
+/**
+ * Servicio base de consulta de mensajes
+ * 
+ * @author arosorio@gmail.com
+ *
+ * @param <E> Entidad
+ * @param <M> Mensaje
+ */
+public abstract class LogsService<E extends BaseEntity, M extends BaseMessageEntity> {
 	@Qualifier("esbJdbcTemplate")
 	@Autowired
 	protected NamedParameterJdbcTemplate esbJdbcTemplate;

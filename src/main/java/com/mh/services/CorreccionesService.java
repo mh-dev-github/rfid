@@ -22,7 +22,16 @@ import com.mh.model.esb.domain.msg.MessageType;
 
 import lombok.val;
 
-public abstract class CorreccionesService<TEntity extends BaseEntity, TMessage extends BaseMessageEntity> {
+/**
+ * Servicio base encargado de hacer las correciones a ñlas entidades que hayan
+ * tenido un problema de sincronización
+ * 
+ * @author arosorio@gmail.com
+ *
+ * @param <E> Entidad
+ * @param <M> Mensaje
+ */
+public abstract class CorreccionesService<E extends BaseEntity, M extends BaseMessageEntity> {
 
 	@Qualifier("esbJdbcTemplate")
 
@@ -32,9 +41,9 @@ public abstract class CorreccionesService<TEntity extends BaseEntity, TMessage e
 	// -------------------------------------------------------------------------------------
 	//
 	// -------------------------------------------------------------------------------------
-	abstract protected JpaRepository<TMessage, Long> getMessageRepository();
+	abstract protected JpaRepository<M, Long> getMessageRepository();
 
-	abstract protected JpaRepository<TEntity, String> getEntityRepository();
+	abstract protected JpaRepository<E, String> getEntityRepository();
 
 	abstract protected String getLogTableName();
 
@@ -64,10 +73,10 @@ public abstract class CorreccionesService<TEntity extends BaseEntity, TMessage e
 					.collect(Collectors.toList());
  			// @formatter:on
 			if (!logs.isEmpty()) {
-				TMessage mensaje = this.getMessageRepository().findOne(logs.get(0).getMid());
+				M mensaje = this.getMessageRepository().findOne(logs.get(0).getMid());
 				mensaje.setFechaUltimoPush(fechaUltimoPush);
 
-				TMessage clon = clonarMensaje(mensaje);
+				M clon = clonarMensaje(mensaje);
 				clon.setEstadoCambio(MessageStatusType.REINTENTO);
 				clon.setIntentos(0);
 				clon.setFechaUltimoPull(fechaUltimoPush);
@@ -76,7 +85,7 @@ public abstract class CorreccionesService<TEntity extends BaseEntity, TMessage e
 				clon.setSyncMensaje("");
 				clon.setSyncException("");
 
-				TEntity entidad = getEntityRepository().findOne(mensaje.getExternalId());
+				E entidad = getEntityRepository().findOne(mensaje.getExternalId());
 				entidad.setFechaUltimoPush(fechaUltimoPush);
 				entidad.setSincronizado(false);
 
@@ -110,10 +119,10 @@ public abstract class CorreccionesService<TEntity extends BaseEntity, TMessage e
 					.collect(Collectors.toList());
  			// @formatter:on
 			if (!logs.isEmpty()) {
-				TMessage mensaje = this.getMessageRepository().findOne(logs.get(0).getMid());
+				M mensaje = this.getMessageRepository().findOne(logs.get(0).getMid());
 				mensaje.setFechaUltimoPush(fechaUltimoPush);
 
-				TMessage clon = clonarMensaje(mensaje);
+				M clon = clonarMensaje(mensaje);
 				clon.setTipoCambio(MessageType.C);
 				clon.setEstadoCambio(MessageStatusType.PENDIENTE);
 				clon.setIntentos(0);
@@ -124,7 +133,7 @@ public abstract class CorreccionesService<TEntity extends BaseEntity, TMessage e
 				clon.setSyncException("");
 				clon.setId("");
 
-				TEntity entidad = getEntityRepository().findOne(mensaje.getExternalId());
+				E entidad = getEntityRepository().findOne(mensaje.getExternalId());
 				entidad.setFechaUltimoPush(fechaUltimoPush);
 				entidad.setSincronizado(false);
 				entidad.setId("");
@@ -159,10 +168,10 @@ public abstract class CorreccionesService<TEntity extends BaseEntity, TMessage e
 					.collect(Collectors.toList());
  			// @formatter:on
 			if (!logs.isEmpty()) {
-				TMessage mensaje = this.getMessageRepository().findOne(logs.get(0).getMid());
+				M mensaje = this.getMessageRepository().findOne(logs.get(0).getMid());
 				mensaje.setFechaUltimoPush(fechaUltimoPush);
 
-				TMessage clon = clonarMensaje(mensaje);
+				M clon = clonarMensaje(mensaje);
 				clon.setTipoCambio(MessageType.U);
 				clon.setEstadoCambio(MessageStatusType.PENDIENTE);
 				clon.setIntentos(0);
@@ -172,7 +181,7 @@ public abstract class CorreccionesService<TEntity extends BaseEntity, TMessage e
 				clon.setSyncMensaje("");
 				clon.setSyncException("");
 
-				TEntity entidad = getEntityRepository().findOne(mensaje.getExternalId());
+				E entidad = getEntityRepository().findOne(mensaje.getExternalId());
 				entidad.setFechaUltimoPush(fechaUltimoPush);
 				entidad.setSincronizado(false);
 
@@ -186,7 +195,8 @@ public abstract class CorreccionesService<TEntity extends BaseEntity, TMessage e
 	// -------------------------------------------------------------------------------------
 	// REINTENTAR
 	// -------------------------------------------------------------------------------------
-	public List<CorreccionCheckResponseDTO> check(IntegracionType tipoIntegracion, MessageType tipoMensaje, List<String> externalId) {
+	public List<CorreccionCheckResponseDTO> check(IntegracionType tipoIntegracion, MessageType tipoMensaje,
+			List<String> externalId) {
 
 		List<CorreccionCheckResponseDTO> result = new ArrayList<>();
 		for (String e : externalId) {
@@ -242,10 +252,9 @@ public abstract class CorreccionesService<TEntity extends BaseEntity, TMessage e
 			case INCONSISTENTE:
 				break;
 			default:
-				dto = new CorreccionCheckResponseDTO(e, false,
-						"Su último estado en el log es " + log.getStatus()
-								+ ". Para poder REINTENTAR la operación de creación o actualización, el último estado debe ser "
-								+ MessageStatusType.INTEGRADO + " o " + MessageStatusType.INCONSISTENTE + ".");
+				dto = new CorreccionCheckResponseDTO(e, false, "Su último estado en el log es " + log.getStatus()
+						+ ". Para poder REINTENTAR la operación de creación o actualización, el último estado debe ser "
+						+ MessageStatusType.INTEGRADO + " o " + MessageStatusType.INCONSISTENTE + ".");
 				break;
 			}
 			break;
@@ -305,5 +314,5 @@ public abstract class CorreccionesService<TEntity extends BaseEntity, TMessage e
 	// @formatter:on
 	}
 
-	abstract protected TMessage clonarMensaje(TMessage a);
+	abstract protected M clonarMensaje(M a);
 }

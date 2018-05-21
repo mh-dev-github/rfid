@@ -14,6 +14,12 @@ import lombok.extern.slf4j.Slf4j;
 import static com.mh.amqp.RabbitMqConfig.EXCHANGE_NAME;
 import static com.mh.amqp.RabbitMqConfig.ROUTING_KEY;
 
+/**
+ * Componente encargado de colocar en cola la petición de ejecutar por demanda todos los flujos
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
 @Component
 @Slf4j
 public class SyncAllHandler extends AbstractHandler<RequestDTO> {

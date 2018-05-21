@@ -20,6 +20,15 @@ import com.mh.model.esb.repo.esb.IntegracionRepository;
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
+
+/**
+ * Servicio base de extracción de datos desde una base de datos
+ * 
+ * @author arosorio@gmail.com
+ *
+ * @param <T>
+ */
+
 @Slf4j
 public abstract class PullService<T> {
 	@Value("${sync.InsertIntoStageBatchSize}")

@@ -15,6 +15,13 @@ import com.mh.servicios.inventarios.InventariosExportService.InventariosDTO;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Controlador inventarios. Atiende las peticiones de RFID para notificar el resultado de los inventarios. 
+ * Internamente genera un archivo con la información recibida.
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
 @RestController
 @RequestMapping("/api/inventarios")
 @Slf4j

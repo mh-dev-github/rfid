@@ -4,6 +4,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.mh.model.esb.domain.esb.OrdenProduccion;
 
-public interface OrdenProduccionRepository extends JpaRepository<OrdenProduccion, String>{
+
+/**
+ * Repositorio Ordenes de Producción
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
+public interface OrdenProduccionRepository extends JpaRepository<OrdenProduccion, String> {
 
 }

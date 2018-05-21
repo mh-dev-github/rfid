@@ -19,6 +19,13 @@ import com.mh.model.esb.repo.esb.LocacionRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
+
+/**
+ * Servicio encargado de exportar los datos de una caja en el directorio asociado a la locación de la misma
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
 @Service
 @Slf4j
 public class CajasExportService {

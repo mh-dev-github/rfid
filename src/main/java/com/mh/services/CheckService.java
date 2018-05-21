@@ -29,6 +29,19 @@ import com.mh.model.esb.domain.msg.MessageStatusType;
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Servicio base que se encarga de verificar que la entidad haya sido
+ * sincronizada correctamente en el destino
+ * 
+ * @author arosorio@gmail.com
+ *
+ * @param <T>
+ *            El objeto que se recibe desde el destino
+ * @param <S>
+ *            El mensaje que se esta verificando
+ * @param <V>
+ *            La entidad asociada al mensaje que se esta verificando
+ */
 @Slf4j
 public abstract class CheckService<T extends PayloadDTO, S extends BaseMessageEntity, V extends BaseEntity>
 		extends BaseSyncService<T> {

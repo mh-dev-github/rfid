@@ -4,6 +4,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.mh.model.esb.domain.msg.ProductoMessage;
 
-public interface ProductoMessageRepository extends JpaRepository<ProductoMessage, Long>{
+/**
+ * Repositorio Mensajes Productos
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
+public interface ProductoMessageRepository extends JpaRepository<ProductoMessage, Long> {
 
 }

@@ -16,6 +16,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Entidad Integración. Representan los flujos de integración. Contienen la fecha y hora de la última consulta que se hizo a la base de datos origen 
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
 @Entity
 @Table(catalog = "esb", name = "Integraciones")
 @Getter

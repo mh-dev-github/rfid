@@ -14,6 +14,13 @@ import com.mh.api.seriales.dto.SerialDTO;
 import com.mh.model.esb.domain.esb.Serial;
 import com.mh.model.esb.repo.esb.SerialRepository;
 
+
+/**
+ * Servicio encargado de persistir los seriales en la base de datos
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
 @Service
 public class SerialesExportService {
 	@Autowired

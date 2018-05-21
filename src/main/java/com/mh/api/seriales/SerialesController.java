@@ -17,6 +17,14 @@ import com.mh.servicios.seriales.SerialesExportService;
 
 import lombok.extern.slf4j.Slf4j;
 
+
+/**
+ * Controlador de seriales. Atiende las peticiones de RFID para notificar los seriales de cada uno de los articulos. 
+ * Internamente genera un archivo con la información recibida.
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
 @RestController
 @RequestMapping("/api/seriales")
 @Slf4j

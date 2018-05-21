@@ -8,6 +8,12 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * Extenbsión a las clase Linea cuando requieran incluir una fecha de despacho
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @ToString(callSuper = true)

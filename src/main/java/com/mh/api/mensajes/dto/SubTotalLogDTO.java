@@ -12,6 +12,13 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.ToString;
 
+
+/**
+ * DTO que permite almacenar los conteos subtotales
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
 @Builder
 @Getter
 @ToString

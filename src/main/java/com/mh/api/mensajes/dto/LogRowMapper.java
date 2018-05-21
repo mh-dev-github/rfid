@@ -8,6 +8,13 @@ import org.springframework.jdbc.core.RowMapper;
 import com.mh.model.esb.domain.msg.MessageStatusType;
 import com.mh.model.esb.domain.msg.MessageType;
 
+
+/**
+ * RowMapper que convierte los resultados de una consulta a una tabla de mensaje a un DTO Log
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
 public class LogRowMapper implements RowMapper<LogDTO> {
 	public LogDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
 		// @formatter:off

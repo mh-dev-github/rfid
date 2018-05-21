@@ -20,6 +20,12 @@ import com.mh.model.esb.repo.esb.LocacionRepository;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Servicio encargado de exportar los datos de inventario en el directorio asociado a la locación del mismo
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
 @Service
 @Slf4j
 public class InventariosExportService {

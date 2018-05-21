@@ -32,6 +32,13 @@ import com.mh.servicios.salidasTienda.SalidasTiendaCorreccionesService;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Controldor de correciones a los flujos de integración. Atiende las peticiones realizadas desde la consola cuando se requiere reintentar o corregir un fallo en la integracion de un registro.
+ * Provee servicios para verificar la viabilidad de la corrección y la corrección misma.  
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
 @RestController
 @RequestMapping("/api/correcciones")
 @CrossOrigin
@@ -81,7 +88,7 @@ public class CorreccionesController {
 			result = this.locacionesService;
 			break;
 		default:
-			throw new RuntimeException("Tipo de intetgración no concido");
+			throw new RuntimeException("Tipo de intetgración desconocido");
 		}
 
 		return result;

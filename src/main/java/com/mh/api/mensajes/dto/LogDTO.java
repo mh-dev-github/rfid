@@ -13,6 +13,13 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.ToString;
 
+
+/**
+ * Representa un mensaje enviado al sistema destino
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
 @Builder
 @Getter
 @ToString
@@ -27,7 +34,7 @@ public class LogDTO {
 	private String id;
 	private long mid;
 	@NonNull
-	private MessageType type;	
+	private MessageType type;
 	@NonNull
 	private MessageStatusType status;
 	private int code;

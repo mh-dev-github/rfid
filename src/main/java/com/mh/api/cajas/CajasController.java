@@ -15,6 +15,14 @@ import com.mh.servicios.cajas.CajasExportService;
 
 import lombok.extern.slf4j.Slf4j;
 
+
+/**
+ * Controlador cajas. Atiende las peticiones de RFID para crear las cajas con las cuales se despacha un pedido. 
+ * Internamente genera un archivo con la información de la caja.
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
 @RestController
 @RequestMapping("/api/cajas")
 @Slf4j

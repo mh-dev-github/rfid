@@ -19,6 +19,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
+/**
+ * 
+ * Entidad base para todos los mensajes
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
 @Data
 @NoArgsConstructor
 @MappedSuperclass

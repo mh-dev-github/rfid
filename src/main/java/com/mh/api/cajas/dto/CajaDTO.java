@@ -5,6 +5,12 @@ import java.util.List;
 
 import lombok.Data;
 
+/**
+ * DTO Caja. Representa una de las cajas con las cuales se despacha un pedido
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
 @Data
 public class CajaDTO {
 	private String externalId;

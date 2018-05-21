@@ -13,6 +13,13 @@ import com.mh.dto.amqp.RequestType;
 
 import lombok.extern.slf4j.Slf4j;
 
+
+/**
+ * Componente encargado de disparar alertas y notificaciones
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
 @Component
 @Slf4j
 public class AlertasLogTask {

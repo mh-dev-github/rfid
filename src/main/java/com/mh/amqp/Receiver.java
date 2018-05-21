@@ -17,6 +17,13 @@ import com.mh.tasks.SyncAllHandler;
 
 import lombok.extern.slf4j.Slf4j;
 
+
+/**
+ * Componente que consume los mensajes en la cola RabbitMQ. Responsable de direccionar cada mensaje al componente respectivo.
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
 @Component("receiver")
 @Slf4j
 public class Receiver {

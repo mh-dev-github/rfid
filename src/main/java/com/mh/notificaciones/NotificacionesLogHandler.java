@@ -8,6 +8,21 @@ import com.mh.dto.amqp.RequestDTO;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Implementa el patron Decorator. Para facilitar la inclusión de nuevas notificaciones esta clase extiende la funcionalidad de la clase AbstractHandler
+ * Recibe un DTO RequestDTO el cual encapsula la informacion de la notificación.
+ * 
+ * Las clases especializadas determinaran si le compete o no procesar el objeto RequestDTO. 
+ * Si debe procesar la petición, esta clase identifica el tipo de operación solicitada y de acuerdo aello invoca el servicio correspondiente.
+ * Es responsabilidad de las clases especilizadas instanciar los servicios adecuados.  
+ * 
+ * @author arosorio@gmail.com
+ *
+ * @param <T> 
+ * 
+ * @see <a href="https://sourcemaking.com/design_patterns/decorator">Decorator Design Pattern</a>
+ */
+
 @Component
 @Slf4j
 public class NotificacionesLogHandler extends AbstractHandler<RequestDTO> {

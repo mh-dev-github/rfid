@@ -15,6 +15,12 @@ import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Servicio encargado de enviar correos electrónicos. Los paramnetros se encuentran configurados en el archivo application.properties
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
 @Service
 @Slf4j
 public class NotificacionEmailService {

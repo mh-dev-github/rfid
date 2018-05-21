@@ -8,6 +8,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Super clase para todas las lineas de mesajes que contngan articulo y cantidad
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

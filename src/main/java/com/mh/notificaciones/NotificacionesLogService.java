@@ -31,6 +31,13 @@ import com.mh.util.mail.NotificacionEmailService;
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
+
+/**
+ * Servicio de notificacion de errores. Detecta en que flujos ocurrieron errores y genera un reporte el cual luego es nmotificado por correo 
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
 @Service
 @Slf4j
 public class NotificacionesLogService {

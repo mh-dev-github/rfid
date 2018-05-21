@@ -8,6 +8,14 @@ import org.springframework.jdbc.core.RowMapper;
 import com.mh.model.esb.domain.msg.MessageStatusType;
 import com.mh.model.esb.domain.msg.MessageType;
 
+
+/**
+ * 
+ * RowMapper que convierte los resultados de una consulta que haga el conteo de los mensajes en una tabla de mensaje a un DTO.
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
 public class SubTotalLogRowMapper implements RowMapper<SubTotalLogDTO> {
 	public SubTotalLogDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
 		// @formatter:off

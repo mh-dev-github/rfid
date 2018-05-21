@@ -16,6 +16,13 @@ import com.mh.util.converters.LocalDateTimeAttributeConverter;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
+/**
+ * Entidad Serial. Almacena los seriales creados para los articulos
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
 @Data
 @NoArgsConstructor
 @Entity

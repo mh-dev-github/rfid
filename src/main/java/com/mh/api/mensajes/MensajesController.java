@@ -38,6 +38,13 @@ import com.mh.servicios.salidasTienda.SalidasTiendaMensajesService;
 
 import lombok.extern.slf4j.Slf4j;
 
+
+/**
+ * Controlador de mensajes. Provee servicios de consulta de los mensajes de los diferentes flujos de integración 
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
 @RestController
 @RequestMapping("/api/mensajes")
 @CrossOrigin

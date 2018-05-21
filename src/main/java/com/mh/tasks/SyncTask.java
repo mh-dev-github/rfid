@@ -12,6 +12,14 @@ import com.mh.dto.amqp.RequestType;
 
 import lombok.extern.slf4j.Slf4j;
 
+
+/**
+ * 
+ * Componente encargado de ejecutar por demanda todos los flujos de integración. Requerido para resolver incidencias.
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
 @Component
 @Slf4j
 public class SyncTask {

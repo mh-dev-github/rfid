@@ -1,5 +1,11 @@
 package com.mh.model.esb.domain.esb;
 
+/**
+ * Enumeración de os tipos de integración
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
 public enum IntegracionType {
 	LOCACIONES("LOCACIONES"), 
 	PRODUCTOS("PRODUCTOS"), 

@@ -13,6 +13,13 @@ import com.mh.util.converters.LocalDateTimeAttributeConverter;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
+/**
+ * Entidad base de objetos a ser integrados
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
 @Data
 @NoArgsConstructor
 @MappedSuperclass

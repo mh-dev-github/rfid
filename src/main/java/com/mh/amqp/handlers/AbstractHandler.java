@@ -1,5 +1,14 @@
 package com.mh.amqp.handlers;
 
+/**
+ * Implementa el patron Decorator. Este patron permite adicionar funcionalidad dinamicamente a un objeto.
+ * 
+ * @author arosorio@gmail.com
+ *
+ * @param <T> 
+ * 
+ * @see <a href="https://sourcemaking.com/design_patterns/decorator">Decorator Design Pattern</a>
+ */
 public abstract class AbstractHandler<T> {
 	protected AbstractHandler<T> nextHandler;
 

@@ -20,6 +20,13 @@ import com.mh.model.esb.domain.esb.IntegracionType;
 
 import lombok.extern.slf4j.Slf4j;
 
+
+/**
+ * Controlador de sincronizaciones. Atiende las peticiones realizadas desde las consolas para ejecutar por demanda los flujos de integración
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
 @RestController
 @RequestMapping("/api/sync")
 @CrossOrigin

@@ -17,6 +17,13 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+
+/**
+ * Mensaje Salida Tienda
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @ToString(callSuper = true)

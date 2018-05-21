@@ -15,6 +15,13 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+
+/**
+ * Entidad sincronizable Entradas Producto Terminado
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @ToString(callSuper=true)

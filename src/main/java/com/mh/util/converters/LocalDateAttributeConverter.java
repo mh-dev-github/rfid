@@ -6,6 +6,12 @@ import java.time.LocalDate;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
+/**
+ * AttributeConverter LocalDate <-> Date
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
 @Converter(autoApply = true)
 public class LocalDateAttributeConverter implements AttributeConverter<LocalDate, Date> {
 	

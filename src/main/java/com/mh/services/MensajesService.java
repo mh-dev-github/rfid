@@ -24,9 +24,18 @@ import com.mh.model.esb.domain.msg.MessageType;
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
+
+/**
+ * Servicio base de consulta de mensajes
+ *  
+ * @author arosorio@gmail.com
+ *
+ * @param <E>
+ * @param <M>
+ */
 @Service
 @Slf4j
-public abstract class MensajesService<TEntity extends BaseEntity, TMessage extends BaseMessageEntity> {
+public abstract class MensajesService<E extends BaseEntity, M extends BaseMessageEntity> {
 
 	@Qualifier("esbJdbcTemplate")
 	@Autowired
@@ -35,9 +44,9 @@ public abstract class MensajesService<TEntity extends BaseEntity, TMessage exten
 	// -------------------------------------------------------------------------------------
 	//
 	// -------------------------------------------------------------------------------------
-	abstract protected JpaRepository<TMessage, Long> getMessageRepository();
+	abstract protected JpaRepository<M, Long> getMessageRepository();
 
-	abstract protected JpaRepository<TEntity, String> getEntityRepository();
+	abstract protected JpaRepository<E, String> getEntityRepository();
 
 	abstract protected String getLogTableName();
 
@@ -131,7 +140,7 @@ public abstract class MensajesService<TEntity extends BaseEntity, TMessage exten
 		return result;
 	}
 
-	public TMessage getLog(Long mid) {
+	public M getLog(Long mid) {
 		return getMessageRepository().findOne(mid);
 	}
 

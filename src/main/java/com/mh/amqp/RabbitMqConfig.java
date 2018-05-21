@@ -10,11 +10,17 @@ import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Clase de configuración RabbitMQ
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
 @Configuration
 public class RabbitMqConfig {
 	public static final String QUEUE_NAME = "rfid-queue";
 	public static final boolean IS_DURABLE_QUEUE = false;
-	
+
 	public static final String EXCHANGE_NAME = "rfid-exchange";
 	public static final String ROUTING_KEY = "rfid-sync";
 
@@ -37,14 +43,15 @@ public class RabbitMqConfig {
 				.with(ROUTING_KEY);
 		// @formatter:on
 	}
-	
+
 	@Bean
 	MessageListenerAdapter listenerAdapter(Receiver receiver) {
 		return new MessageListenerAdapter(receiver, Receiver.RECEIVE_METHOD_NAME);
 	}
 
 	@Bean
-	SimpleMessageListenerContainer container(ConnectionFactory connectionFactory,MessageListenerAdapter listenerAdapter) {
+	SimpleMessageListenerContainer container(ConnectionFactory connectionFactory,
+			MessageListenerAdapter listenerAdapter) {
 		SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
 		container.setConnectionFactory(connectionFactory);
 		container.setQueueNames(QUEUE_NAME);

@@ -17,6 +17,12 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+/**
+ * Clase de configuración JDBC. Provee conexión a la base de datos origen
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(entityManagerFactoryRef = "erpEntityManagerFactory", transactionManagerRef = "erpTransactionManager", basePackages = {

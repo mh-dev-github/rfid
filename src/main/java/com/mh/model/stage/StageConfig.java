@@ -17,6 +17,12 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+/**
+ * Clase de configuración JDBC. Provee conexión a la base de datos stage
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(entityManagerFactoryRef = "stageEntityManagerFactory", transactionManagerRef = "stageTransactionManager", basePackages = {

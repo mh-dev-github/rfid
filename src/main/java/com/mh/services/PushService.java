@@ -32,6 +32,17 @@ import com.mh.model.esb.domain.msg.MessageType;
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
+
+
+/**
+ * Servicio base de envio de mensajes al sistema destino
+ * 
+ * @author arosorio@gmail.com
+ *
+ * @param <T>
+ * @param <S>
+ * @param <V>
+ */
 @Slf4j
 public abstract class PushService<T extends PayloadDTO, S extends BaseMessageEntity, V extends BaseEntity>
 		extends BaseSyncService<T> {

@@ -6,6 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.mh.model.esb.domain.esb.Locacion;
 
-public interface LocacionRepository extends JpaRepository<Locacion, String>{
+/**
+ * Repositorio Locaciones
+ * 
+ * @author arosorio@gmail.com
+ *
+ */
+public interface LocacionRepository extends JpaRepository<Locacion, String> {
 	List<Locacion> findByName(String name);
 }
